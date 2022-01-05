@@ -1,0 +1,75 @@
+package tool
+
+import (
+	"github.com/cheekybits/genny/generic"
+)
+
+type Typ generic.Type
+
+func SliceIndex_TTyp(v Typ, s *[]Typ) int {
+	for ind, s1 := range *s {
+		if v == s1 {
+			return ind
+		}
+	}
+	return -1
+}
+
+func SliceEach_TTyp(each func(Typ), s *[]Typ)  {
+	for _, v := range *s {
+		each(v)
+	}
+}
+
+
+func SliceSliceEach_TTyp(each func(*[]Typ), ss *[]*[]Typ)  {
+	for _, s := range *ss {
+		each(s)
+	}
+}
+
+func SliceWithout_TTyp(s *[]Typ, v ...Typ) *[]Typ {
+	retS := new([]Typ)
+	for _, s1 := range *s {
+		if SliceIndex_TTyp(s1, &v) == -1 {
+			*retS  = append(*retS , s1)
+		}
+	}
+	return retS
+}
+
+func SliceRepeat_TTyp(v Typ, n int) *[]Typ {
+	s := make([]Typ, n)
+	for i := 0; i < n; i++ {
+		s[i] = v
+	}
+	return &s
+}
+
+func SliceIntersection_TTyp(ss ...*[]Typ) *[]Typ {
+	if len(ss) == 0 {
+		return &[]Typ{}
+	}
+
+	return SliceSliceReduce_TTypRTTyp(func(orin *[]Typ, s *[]Typ) *[]Typ {
+		retS := new([]Typ)
+		SliceEach_TTyp(func(v Typ) {
+			if SliceIndex_TTyp(v, orin) != -1 {
+				*retS = append(*retS, v)
+			}
+		}, s)
+		return retS
+	}, &ss, ss[0])
+}
+
+func SliceUnion_TTyp(ss ...*[]Typ) *[]Typ {
+	retS := new([]Typ)
+	SliceSliceEach_TTyp(func(s *[]Typ) {
+		SliceEach_TTyp(func(v Typ) {
+			if SliceIndex_TTyp(v, retS) == -1 {
+				*retS = append(*retS, v)
+			}
+		}, s)
+	}, &ss)
+	return retS
+}

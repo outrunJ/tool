@@ -1,0 +1,60 @@
+package tool
+
+import "github.com/cheekybits/genny/generic"
+
+type TKey generic.Type
+type TValue generic.Type
+
+func MapDeleteZero_KTKeyVTValue(m *map[TKey]TValue) {
+	for key, value := range *m {
+		if IsZero(value) {
+			delete(*m, key)
+		}
+	}
+}
+
+func MapCloneDeleteZero_KTKeyVTValue(m *map[TKey]TValue) *map[TKey]TValue {
+	retMap := map[TKey]TValue{}
+	for key, value := range *m {
+		if !IsZero(value) {
+			retMap[key] = value
+		}
+	}
+	return &retMap
+}
+
+func MapKeys_KTKeyVTValue(m *map[TKey]TValue) *[]TKey {
+	keys := make([]TKey, len(*m))
+	ind := 0
+	for key := range *m {
+		keys[ind] = key
+		ind++
+	}
+	return &keys
+}
+
+func MapValues_KTKeyVTValue(m *map[TKey]TValue, keys ...TKey) *[]TValue {
+	keysLen := len(keys)
+	values := new([]TValue)
+
+	if keysLen == 0 {
+		for _, value := range *m {
+			*values = append(*values, value)
+		}
+	} else {
+		for _, key := range keys {
+			*values = append(*values, (*m)[key])
+		}
+	}
+	return values
+}
+
+func MapMerge_KTKeyVTValue(maps ...*map[TKey]TValue) *map[TKey]TValue {
+	retM := map[TKey]TValue{}
+	for _, m := range maps {
+		for key, value := range *m {
+			retM[key] = value
+		}
+	}
+	return &retM
+}

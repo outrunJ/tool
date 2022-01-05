@@ -1,0 +1,24 @@
+package tool
+
+import "github.com/cheekybits/genny/generic"
+
+type TKey generic.Type
+type TValue generic.Type
+type RtKey generic.Type
+type RtValue generic.Type
+
+func Map2Map_KTKeyVTValueKRtKeyVRtValue(m *map[TKey]TValue) *map[RtKey]RtValue {
+	rst := map[RtKey]RtValue{}
+	for key, val := range *m {
+		rst[TKey2RtKey(key)] = TValue2RtValue(val)
+	}
+	return &rst
+}
+
+func Map2MapVSlice_KTKeyVTValueKRtKeyVRtValue(m *map[TKey][]TValue) *map[RtKey][]RtValue {
+	rst := map[RtKey][]RtValue{}
+	for key, val := range *m {
+		rst[TKey2RtKey(key)] = *Slice2Slice_TTValueRTRtValue(&val)
+	}
+	return &rst
+}

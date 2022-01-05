@@ -1,0 +1,38 @@
+package tool
+
+import "github.com/cheekybits/genny/generic"
+
+type Typ generic.Type
+
+type Set_TTyp struct {
+	m *map[Typ]bool
+}
+
+func NewSet_TTyp() *Set_TTyp {
+	return &Set_TTyp{
+		m: &map[Typ]bool{},
+	}
+}
+
+func (s *Set_TTyp) Add(o Typ) {
+	(*s.m)[o] = true
+}
+func (s *Set_TTyp) Remove(o Typ) {
+	delete(*s.m, o)
+}
+func (s *Set_TTyp) Has(o Typ) bool {
+	_, ok := (*s.m)[o]
+	return ok
+}
+func (s *Set_TTyp) Len() int {
+	return len(*s.m)
+}
+func (s *Set_TTyp) Clear() {
+	s.m = &map[Typ]bool{}
+}
+func (s *Set_TTyp) IsEmpty() bool {
+	return s.Len() == 0
+}
+func (s *Set_TTyp) Slice() *[]Typ {
+	return MapKeys_KTypVBool(s.m)
+}
