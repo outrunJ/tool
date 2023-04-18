@@ -1,3 +1,3 @@
 # tool
 
-Implementation of language feature extensions and basic tools in the GoLand language.
+The simplest implementation of out-of-the-box automation tools and scripts.
